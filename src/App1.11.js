@@ -12,44 +12,50 @@ const Button = ({setFeedback, title}) => {
 const StatisticLine = ({text, value}) => {
   return(
     <div>
-      <p>
         {text}: {value}
-      </p>
     </div>
   )
 }
 
-const Statistics = ({good, bad, neutral, total}) => {
-  if((total < 1)){
-    return(
+const Statistics = ({ good, bad, neutral, total }) => {
+  if (total < 1) {
+    return (
       <div>
         <p>No feedback given</p>
       </div>
-    )
+    );
   }
-  return(
-      <table>
-        <h1>
-          <b>Statistics</b>
-        </h1>
-        <hr/>
+  return (
+    <table>
+      <tbody>
         <tr>
-          <StatisticLine text="good" value ={good} />
+          <td>
+            <StatisticLine text="good" value={good} />
+          </td>
         </tr>
         <tr>
-          <StatisticLine text="neutral" value ={neutral} />
+          <td>
+            <StatisticLine text="neutral" value={neutral} />
+          </td>
         </tr>
         <tr>
-          <StatisticLine text="bad" value ={bad} />
+          <td>
+            <StatisticLine text="bad" value={bad} />
+          </td>
         </tr>
         <tr>
-          Average: {(good || neutral || bad) && ((good + neutral - bad) / total)}%
+          <td>
+            Average:{" "}
+            {(good || neutral || bad) && (good + neutral - bad) / total}
+          </td>
         </tr>
         <tr>
-          Positive: {(good || total ) && good / total}%</tr>
-      </table>
-  )
-}
+          <td>Positive: {(good || total) && (Math.floor((good / total) * 100))}%</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+};
 
 const App = () => {
   // save clicks of each button to its own state
@@ -59,17 +65,14 @@ const App = () => {
 
   const setToGood = () => {
     setGood(good + 1);
-    console.log(good);
   }
 
   const setToNeutral = () => {
     setNeutral(neutral + 1);
-    console.log(neutral);
   }
 
   const setToBad = () => {
     setBad(bad + 1);
-    console.log(bad);
   }
 
   const total = good + bad + neutral;
@@ -83,6 +86,8 @@ const App = () => {
         <Button setFeedback={setToNeutral} title='neutral'/>
         <Button setFeedback={setToBad} title='bad'/>
       </div>
+      <h1><b>Statistics</b></h1>
+      <hr/>
       <Statistics good={good} neutral={neutral} bad={bad} total={total} />
     </div>
   )

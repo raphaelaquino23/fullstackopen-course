@@ -1,5 +1,6 @@
 const Header = (props) => {
-  const {name} = props.course;
+  const {course} = props;
+  const {name} = course;
   return(
     <div>
       <h1>Course: {name}</h1>
@@ -8,7 +9,9 @@ const Header = (props) => {
 }
 
 const Total = (props) => {
-  const {parts} = props.course;
+  const {course} = props;
+  const {parts} = course;
+
   let total = 0;
   
   parts.forEach(value => {
@@ -33,7 +36,8 @@ const Part = (props) => {
 }
 
 const Content = (props) => {
-  const {parts} = props.course;
+  const {course} = props;
+  const {parts} = course;
   return(
     <div>
       {parts.map((element, index) => 

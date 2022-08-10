@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-
 const Button = ({setFeedback, title}) => {
   return(
     <div>
@@ -28,26 +27,21 @@ const Statistics = ({good, bad, neutral, total}) => {
     )
   }
   return(
-      <table>
-        <h1>
-          <b>Statistics</b>
-        </h1>
-        <hr/>
-        <tr>
-          <StatisticLine text="good" value ={good} />
-        </tr>
-        <tr>
-          <StatisticLine text="neutral" value ={neutral} />
-        </tr>
-        <tr>
-          <StatisticLine text="bad" value ={bad} />
-        </tr>
-        <tr>
-          Average: {(good || neutral || bad) && ((good + neutral - bad) / total)}%
-        </tr>
-        <tr>
-          Positive: {(good || total ) && good / total}%</tr>
-      </table>
+    <div>
+      <h1>
+        <b>Statistics</b>
+      </h1>
+      <hr/>
+      <StatisticLine text="good" value ={good} />
+      <StatisticLine text="neutral" value ={neutral} />
+      <StatisticLine text="bad" value ={bad} />
+      <p>
+        Average: {(good || neutral || bad) && ((good + neutral - bad) / total)}%
+      </p>
+      <p>
+        Positive: {(good || total ) && good / total}%
+      </p>
+    </div>
   )
 }
 
