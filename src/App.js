@@ -29,6 +29,9 @@ const Statistics = ({good, neutral, bad, total}) => {
         Neutral: {neutral}
       </p>
       <p>
+        Bad: {bad}
+      </p>
+      <p>
         All: {good + neutral}
       </p>
       <p>
@@ -49,17 +52,14 @@ const App = () => {
 
   const setToGood = () => {
     setGood(good + 1);
-    console.log(good);
   }
 
   const setToNeutral = () => {
     setNeutral(neutral + 1);
-    console.log(neutral);
   }
 
   const setToBad = () => {
     setBad(bad + 1);
-    console.log(bad);
   }
 
   const total = good + bad + neutral;
