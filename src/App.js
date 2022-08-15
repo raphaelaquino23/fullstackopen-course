@@ -1,79 +1,56 @@
-import { useState } from 'react'
-
-const Button = ({setFeedback, title}) => {
-  return(
-    <div>
-      <button onClick={setFeedback}>{title}</button>
-    </div>
-  )
-}
-
-const Statistics = ({good, neutral, bad, total}) => {
-  if((total < 1)){
-    return(
-      <div>
-        <p>No feedback given</p>
-      </div>
-    )
-  }
-  return(
-    <div>
-      <h1>
-        <b>Statistics</b>
-      </h1>
-      <hr/>
-      <p>
-        Good: {good}
-      </p>
-      <p>
-        Neutral: {neutral}
-      </p>
-      <p>
-        Bad: {bad}
-      </p>
-      <p>
-        All: {good + neutral}
-      </p>
-      <p>
-        Average: {(good || neutral || bad) && ((good + neutral - bad) / total)}%
-      </p>
-      <p>
-        Positive: {(good || total) && (Math.floor((good / total) * 100))}%
-      </p>
-    </div>
-  )
-}
-
+import Course from './components/Course'
 const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
-  const setToGood = () => {
-    setGood(good + 1);
-  }
-
-  const setToNeutral = () => {
-    setNeutral(neutral + 1);
-  }
-
-  const setToBad = () => {
-    setBad(bad + 1);
-  }
-
-  const total = good + bad + neutral;
   return (
     <div>
-      <div>
-        <h1><b>Give Feedback</b></h1>
-      </div>
-      <div>
-        <Button setFeedback={setToGood} title='good' />
-        <Button setFeedback={setToNeutral} title='neutral'/>
-        <Button setFeedback={setToBad} title='bad'/>
-      </div>
-      <Statistics good={good} neutral={neutral} bad={bad} total={total} />
+      <h1>Web development curriculum</h1>
+      {courses.map(value => 
+        <Course key={value.id} course={value} />
+      )}
     </div>
   )
 }
