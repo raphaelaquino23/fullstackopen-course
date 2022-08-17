@@ -4,9 +4,11 @@ const Content = ({ parts  }) => {
   parts.forEach(value => exercises += value.exercises)
   return(
     <div>
-      {parts.map(value => 
-        <Part key={value.id} part={value}/>
-      )}
+      <ul>
+        {parts.map(value => 
+          <Part key={value.id} part={value}/>
+        )}
+      </ul>
       <p><b>total of {exercises}</b></p>
     </div>
   )
