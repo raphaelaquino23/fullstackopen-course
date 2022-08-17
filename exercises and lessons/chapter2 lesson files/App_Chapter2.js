@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Note from "./components/Note";
+import Note from "../../src/components/Note";
 
 const App = () => {
   const [danotes, setNotes] = useState([]);
