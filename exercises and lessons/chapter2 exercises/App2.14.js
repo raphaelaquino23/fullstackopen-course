@@ -4,7 +4,7 @@ import axios from 'axios'
 const COUNTRY_API_DOMAIN = 'https://restcountries.com/v3.1/';
 const weather_api_key = process.env.REACT_APP_WEATHER_API_KEY;
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather?'
-//https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+
 const Country = ({ country }) => {
   const { name, capital, flags, population, area, coatOfArms, latlng } = country;
   const { official, common } = name;
@@ -23,6 +23,7 @@ const Country = ({ country }) => {
     })
   }, [])
   console.log(weather);
+  console.log(country.languages);
   const languages = Object.values(country.languages);
   return (
     <div>
@@ -54,7 +55,6 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('');
   const [countries, setCountries] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([])
-  const [weather, setWeather] = useState([]);
   useEffect(() => {
       axios
         .get(`${COUNTRY_API_DOMAIN}/all`)

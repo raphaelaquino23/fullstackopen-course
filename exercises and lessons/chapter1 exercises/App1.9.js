@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Button = ({setFeedback, title}) => {
+const Button = ({ setFeedback, title }) => {
   return(
     <div>
       <button onClick={setFeedback}>{title}</button>
@@ -8,7 +8,7 @@ const Button = ({setFeedback, title}) => {
   )
 }
 
-const Statistics = ({good, neutral, bad, total}) => { 
+const Statistics = ({ good, neutral, bad, total }) => { 
   if((total < 1)){
     return(
       <div>
