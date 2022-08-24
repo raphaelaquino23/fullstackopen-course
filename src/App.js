@@ -1,108 +1,95 @@
-import { useEffect, useState } from 'react'
-import contactsService from './services/contacts';
+import { useState, useEffect } from 'react'
+
+import Note from './components/Note'
+import Notification from './components/Notification'
+import noteService from './services/notes'
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [newFilter, setNewFilter] = useState('');
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('')
+  const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    contactsService.getAll().then((initializePersons) => {
-      setPersons(initializePersons);
-    });
-  });
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes)
+      })
+  }, [])
 
-  const updateRecord = (name, number) => {
-    const person = persons.find(person => person.name === name)
-    const changedNote = { ...person, number: number}
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() > 0.5,
+      id: notes.length + 1,
+    }
 
-    contactsService
-      .update(person.id, changedNote)
+    noteService
+      .create(noteObject)
       .then(returnedNote => {
-        setPersons(persons.map(person => person.id !== person.id ? person : returnedNote))
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
+      })
+  }
+
+  const handleNoteChange = (event) => {
+    setNewNote(event.target.value)
+  }
+
+  const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+  
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
-        alert(
-          `the note '${person.content}' was already deleted from server`
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
         )
-        setPersons(persons.filter(n => n.id !== person.id))
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
       })
   }
 
-  const addRecord = (event) => {
-    event.preventDefault();
-    const recordObject = {
-      id: persons.length + 1,
-      name: newName,
-      number: newNumber,
-    };
-    recordAlreadyExists(recordObject.name, recordObject.number)
-      ? window.confirm(
-          `number: ${recordObject.name} already added to phonebook, replace old number with new one?`
-        )
-        ? updateRecord(recordObject.name, recordObject.number)
-        : contactsService.create(recordObject).then((returnedPerson) => {
-            setPersons(persons.concat(returnedPerson));
-            setNewNumber("");
-            setNewName("");
-          })
-      : contactsService.create(recordObject).then((returnedPerson) => {
-          setPersons(persons.concat(returnedPerson));
-          setNewNumber("");
-          setNewName("");
-        });
-  };
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  }
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  }
-  const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
-  }
-  const handleDelete = ({ name, id }) => {
-    window.confirm(`Delete ${name} ?`) ?
-    contactsService.remove(id) : console.log('not deleting. . .')
-  }
-
-  const recordAlreadyExists = (name, number) => {
-    // check if number or name already exists
-    return persons.find(value => value.name === name) 
-    || persons.find(value => value.number === number) 
-  }
-  const newPersonsList = persons.filter(value => 
-    value.name.toUpperCase().includes(newFilter.toUpperCase()) || value.number.includes(newFilter)
-  )
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <hr />
+      <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
-        filter shown with{" "}
-        <input value={newFilter} onChange={handleFilterChange} />
-      </div>
-      <form onSubmit={addRecord}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} /> <br />
-          number: <input value={newNumber} onChange={handleNumberChange} />{" "}
-          <br />
-          <button type="submit">add</button>
-        </div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all' }
+        </button>
+      </div>   
+      <ul>
+        {notesToShow.map(note => 
+          <Note
+            key={note.id}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
+        )}
+      </ul>
+      <form onSubmit={addNote}>
+        <input
+          value={newNote}
+          onChange={handleNoteChange}
+        />
+        <button type="submit">save</button>
       </form>
-      <hr />
-      <h2>Numbers</h2>
-      {newPersonsList.map((value) => (
-        <li>
-          {value.name} {value.number} {' '}
-          <button onClick={() => handleDelete(value)}>delete</button>
-        </li>
-      ))}
     </div>
-  );
+  )
 }
 
 export default App
